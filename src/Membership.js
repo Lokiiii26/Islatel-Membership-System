@@ -455,6 +455,7 @@ function Membership() {
         }}
         onSave={handleSaveMember}
         reactivateMode={reactivateMode}
+        existingMembers={members}
       />
 
       {/* View Member Modal */}

@@ -1,6 +1,6 @@
 import React from "react";
 
-const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reactivateMode = false }) => {
+const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reactivateMode = false, existingMembers = [] }) => {
   const [formData, setFormData] = React.useState({
     name: "",
     bookValue: "",
@@ -21,7 +21,7 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
   const [errors, setErrors] = React.useState({});
   const [addAmount, setAddAmount] = React.useState("");
 
-  const requiredFields = ["name", "startDate", "endDate", "email", "mobile"];
+  const requiredFields = ["name", "startDate", "endDate"];
 
   const validateForm = () => {
     const newErrors = {};
@@ -40,6 +40,30 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
     // Mobile validation
     if (formData.mobile && !/^\d{10,11}$/.test(formData.mobile.replace(/\D/g, ""))) {
       newErrors.mobile = "Please enter a valid mobile number (10-11 digits)";
+    }
+
+    // Duplicate name validation
+    if (formData.name) {
+      const duplicateName = existingMembers.find(
+        (m) =>
+          m.name.trim().toLowerCase() === formData.name.trim().toLowerCase() &&
+          (!member || m.id !== member.id)
+      );
+      if (duplicateName) {
+        newErrors.name = "A member with this name already exists";
+      }
+    }
+
+    // Duplicate email validation
+    if (formData.email) {
+      const duplicateEmail = existingMembers.find(
+        (m) =>
+          m.email.trim().toLowerCase() === formData.email.trim().toLowerCase() &&
+          (!member || m.id !== member.id)
+      );
+      if (duplicateEmail) {
+        newErrors.email = "A member with this email already exists";
+      }
     }
 
     // Date validation
@@ -103,10 +127,19 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value
-    }));
+    setFormData((prev) => {
+      const updated = {
+        ...prev,
+        [name]: type === "checkbox" ? checked : value
+      };
+      // Auto-set end date to 1 year after start date
+      if (name === "startDate" && value) {
+        const start = new Date(value);
+        start.setFullYear(start.getFullYear() + 1);
+        updated.endDate = start.toISOString().split("T")[0];
+      }
+      return updated;
+    });
   };
 
   const handleSubmit = (e) => {
