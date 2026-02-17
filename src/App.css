@@ -1,0 +1,22 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f6f1;
+  color: #2c2c2c;
+  overflow-x: hidden;
+}
+
+.App {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
