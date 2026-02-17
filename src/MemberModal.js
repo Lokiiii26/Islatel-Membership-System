@@ -21,8 +21,6 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
   const [errors, setErrors] = React.useState({});
   const [addAmount, setAddAmount] = React.useState("");
 
-  const isEditing = !!member;
-
   const requiredFields = ["name", "startDate", "endDate", "email", "mobile"];
 
   const validateForm = () => {
