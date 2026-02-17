@@ -604,6 +604,96 @@
   text-transform: uppercase;
 }
 
+/* ================= TOP MEMBERS SECTION ================= */
+.top-members-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f0e6d2;
+  margin-bottom: 28px;
+  overflow: hidden;
+  animation: fadeIn 0.5s ease-out backwards;
+  animation-delay: 0.55s;
+}
+
+.top-members-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0e6d2;
+}
+
+.top-members-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c2c2c;
+}
+
+.top-members-list {
+  display: flex;
+  gap: 0;
+}
+
+.top-member-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px;
+  border-right: 1px solid #f0e6d2;
+  transition: all 0.2s ease;
+}
+
+.top-member-item:last-child {
+  border-right: none;
+}
+
+.top-member-item:hover {
+  background-color: #fef8f0;
+}
+
+.top-member-item.rank-1 {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.06) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.top-member-rank {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.top-member-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.top-member-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c2c2c;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.top-member-status {
+  display: flex;
+}
+
+.top-member-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #b8860b;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.top-members-empty {
+  padding: 32px;
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+  width: 100%;
+}
+
 /* ================= TABLE SECTION ================= */
 .table-card {
   background: #fff;
@@ -907,6 +997,46 @@
     justify-content: center;
     padding: 10px 16px;
     font-size: 12px;
+  }
+
+  /* Top Members */
+  .top-members-card {
+    margin-bottom: 16px;
+  }
+
+  .top-members-header {
+    padding: 14px 16px;
+  }
+
+  .top-members-title {
+    font-size: 14px;
+  }
+
+  .top-members-list {
+    flex-direction: column;
+  }
+
+  .top-member-item {
+    border-right: none;
+    border-bottom: 1px solid #f0e6d2;
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .top-member-item:last-child {
+    border-bottom: none;
+  }
+
+  .top-member-rank {
+    font-size: 22px;
+  }
+
+  .top-member-name {
+    font-size: 13px;
+  }
+
+  .top-member-value {
+    font-size: 14px;
   }
 
   /* Charts */

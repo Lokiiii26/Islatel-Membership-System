@@ -104,10 +104,10 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
     
     y += 5;
     doc.setFontSize(9);
-    doc.text("Lucap Highway, Alaminos City, Pangasinan", pageWidth / 2, y, { align: "center" });
+    doc.text("Lucap, Alaminos City, Pangasinan", pageWidth / 2, y, { align: "center" });
     
     y += 4;
-    doc.text("www.islatel.ph  |  (+63) 968 851 5485", pageWidth / 2, y, { align: "center" });
+    doc.text("www.islatelph.com  |  (+63) 968 851 5485", pageWidth / 2, y, { align: "center" });
 
     /* ================= DOCUMENT TITLE ================= */
     y += 12;
@@ -160,10 +160,10 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
     
     // Summary container
     doc.setFillColor(...BRAND.lightGray);
-    doc.roundedRect(margin, y, contentWidth, 28, 3, 3, "F");
+    doc.roundedRect(margin, y, contentWidth, 42, 3, 3, "F");
     doc.setDrawColor(...BRAND.gold);
     doc.setLineWidth(0.5);
-    doc.roundedRect(margin, y, contentWidth, 28, 3, 3, "S");
+    doc.roundedRect(margin, y, contentWidth, 42, 3, 3, "S");
     
     // Summary title
     doc.setFont(undefined, "bold");
@@ -171,14 +171,14 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
     doc.setTextColor(...BRAND.darkGold);
     doc.text("SUMMARY", margin + 6, y + 7);
     
-    // Summary items in a row
+    // Summary items - Row 1
     doc.setFontSize(8);
     doc.setFont(undefined, "normal");
     doc.setTextColor(...BRAND.charcoal);
     
-    const summaryItems = [
+    const summaryRow1 = [
       { label: "Total Members:", value: String(members.length) },
-      { label: "Total Lifetime Book Value:", value: `P${(totalValue || 0).toFixed(2)}` },
+      { label: "Total Lifetime Book Value:", value: `P${(totalValue || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` },
       { label: "Active:", value: String(activeCount) },
       { label: "Expired:", value: String(expiredCount) }
     ];
@@ -186,7 +186,7 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
     let summaryX = margin + 6;
     const itemSpacing = (contentWidth - 12) / 4;
     
-    summaryItems.forEach((item, i) => {
+    summaryRow1.forEach((item, i) => {
       doc.setFont(undefined, "normal");
       doc.setTextColor(...BRAND.gray);
       doc.text(item.label, summaryX + (i * itemSpacing), y + 17);
@@ -195,8 +195,61 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
       doc.text(item.value, summaryX + (i * itemSpacing), y + 23);
     });
 
+    // Summary items - Row 2
+    const summaryRow2 = [
+      { label: "Avg. Lifetime Book Value:", value: `P${(avgValue || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` },
+      { label: "Active Rate:", value: `${members.length > 0 ? ((activeCount / members.length) * 100).toFixed(1) : 0}%` }
+    ];
+
+    const row2Spacing = (contentWidth - 12) / 2;
+    summaryRow2.forEach((item, i) => {
+      doc.setFont(undefined, "normal");
+      doc.setTextColor(...BRAND.gray);
+      doc.text(item.label, summaryX + (i * row2Spacing), y + 32);
+      doc.setFont(undefined, "bold");
+      doc.setTextColor(...BRAND.charcoal);
+      doc.text(item.value, summaryX + (i * row2Spacing), y + 38);
+    });
+
+    /* ================= TOP 3 HIGHEST BOOK VALUE ================= */
+    y += 50;
+    const top3 = [...members]
+      .sort((a, b) => (parseFloat(b.bookValue) || 0) - (parseFloat(a.bookValue) || 0))
+      .slice(0, 3);
+
+    if (top3.length > 0) {
+      const top3Height = 8 + top3.length * 8 + 4;
+      doc.setFillColor(255, 251, 235);
+      doc.roundedRect(margin, y, contentWidth, top3Height, 3, 3, "F");
+      doc.setDrawColor(...BRAND.gold);
+      doc.setLineWidth(0.5);
+      doc.roundedRect(margin, y, contentWidth, top3Height, 3, 3, "S");
+
+      doc.setFont(undefined, "bold");
+      doc.setFontSize(10);
+      doc.setTextColor(...BRAND.darkGold);
+      doc.text("TOP 3 HIGHEST LIFETIME BOOK VALUE", margin + 6, y + 7);
+
+      const medals = ["1st", "2nd", "3rd"];
+      top3.forEach((m, i) => {
+        const rowY = y + 14 + i * 8;
+        doc.setFontSize(8);
+        doc.setFont(undefined, "bold");
+        doc.setTextColor(...BRAND.darkGold);
+        doc.text(medals[i], margin + 6, rowY);
+        doc.setFont(undefined, "normal");
+        doc.setTextColor(...BRAND.charcoal);
+        doc.text(m.name || "—", margin + 20, rowY);
+        doc.setFont(undefined, "bold");
+        doc.setTextColor(...BRAND.darkGold);
+        const val = `P${parseFloat(m.bookValue || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        doc.text(val, margin + contentWidth - 6, rowY, { align: "right" });
+      });
+
+      y += top3Height + 6;
+    }
+
     /* ================= FILTER INFO ================= */
-    y += 36;
     if (hasActiveFilters) {
       doc.setFillColor(255, 249, 196);
       doc.roundedRect(margin, y, contentWidth, 12, 2, 2, "F");
@@ -233,7 +286,7 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
     const headers = ["#", "Member Name", "Start Date", "End Date", "Lifetime Book Value", "Status", "Action"];
     const widths = [8, 42, 28, 28, 28, 22, 24];
     let x = margin;
-    
+
     // Header row
     const headerHeight = 15;
     doc.setFillColor(...BRAND.gold);
@@ -297,7 +350,7 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
       // Lifetime Book Value with better formatting
       doc.setFont(undefined, "bold");
       doc.setTextColor(46, 125, 50);
-      const bookValueText = `P${parseFloat(t.bookValue || 0).toFixed(2)}`;
+      const bookValueText = `P${parseFloat(t.bookValue || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       doc.text(bookValueText, x + widths[4] - 2, y, { align: "right" });
       x += widths[4];
       
@@ -337,29 +390,25 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
     doc.setLineWidth(0.5);
     doc.line(margin, y, pageWidth - margin, y);
 
-    /* ================= ADDITIONAL STATS ================= */
-    y += 8;
-    if (y < pageHeight - 60) {
-      doc.setFillColor(250, 248, 244);
-      doc.roundedRect(margin, y, contentWidth, 16, 2, 2, "F");
-      
-      doc.setFontSize(8);
-      doc.setFont(undefined, "bold");
-      doc.setTextColor(...BRAND.charcoal);
-      doc.text("ADDITIONAL STATISTICS", margin + 4, y + 6);
-      
-      doc.setFont(undefined, "normal");
-      doc.setFontSize(7);
-      doc.setTextColor(...BRAND.gray);
-      
-      const statsText = [
-        `Average Lifetime Book Value: P${(avgValue || 0).toFixed(2)}`,
-        `Active Rate: ${members.length > 0 ? ((activeCount / members.length) * 100).toFixed(1) : 0}%`,
-        `Total Transactions: ${filteredTransactions.length}`
-      ];
-      
-      doc.text(statsText.join("   |   "), margin + 4, y + 12);
+    // Table totals row
+    y += 2;
+    if (y > pageHeight - 50) {
+      addNewPage();
     }
+    doc.setFillColor(250, 248, 244);
+    doc.roundedRect(margin, y, contentWidth, 14, 2, 2, "F");
+    doc.setDrawColor(...BRAND.gold);
+    doc.setLineWidth(0.3);
+    doc.roundedRect(margin, y, contentWidth, 14, 2, 2, "S");
+
+    doc.setFontSize(8);
+    doc.setFont(undefined, "bold");
+    doc.setTextColor(...BRAND.charcoal);
+    doc.text(`Total Transactions: ${filteredTransactions.length}`, margin + 6, y + 9);
+
+    const filteredBookTotal = filteredTransactions.reduce((sum, t) => sum + (parseFloat(t.bookValue) || 0), 0);
+    doc.setTextColor(...BRAND.darkGold);
+    doc.text(`Total Lifetime Book Value: P${filteredBookTotal.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, margin + contentWidth - 6, y + 9, { align: "right" });
 
     addFooter(doc, pageWidth, pageHeight, margin);
     doc.save("hello_club_transaction_history.pdf");
@@ -372,29 +421,6 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
     doc.setDrawColor(...BRAND.gold);
     doc.setLineWidth(0.5);
     doc.line(m, footerY, w - m, footerY);
-    
-    // Signature section
-    doc.setFontSize(8);
-    doc.setFont(undefined, "bold");
-    doc.setTextColor(...BRAND.charcoal);
-    doc.text("Prepared by:", m, footerY + 8);
-    doc.text("Verified by:", w / 2 - 10, footerY + 8);
-    doc.text("Approved by:", w - m - 35, footerY + 8);
-    
-    doc.setFont(undefined, "normal");
-    doc.setDrawColor(...BRAND.gray);
-    doc.setLineWidth(0.3);
-    
-    // Signature lines
-    doc.line(m, footerY + 18, m + 45, footerY + 18);
-    doc.line(w / 2 - 10, footerY + 18, w / 2 + 35, footerY + 18);
-    doc.line(w - m - 35, footerY + 18, w - m, footerY + 18);
-    
-    doc.setFontSize(6);
-    doc.setTextColor(...BRAND.gray);
-    doc.text("Name / Signature / Date", m, footerY + 22);
-    doc.text("Name / Signature / Date", w / 2 - 10, footerY + 22);
-    doc.text("Name / Signature / Date", w - m - 35, footerY + 22);
     
     // Bottom bar
     doc.setFillColor(...BRAND.charcoal);

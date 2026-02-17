@@ -12,7 +12,7 @@ import MemberModal from "./MemberModal";
 import TransactionHistory from "./TransactionHistory";
 import "./Membership.css";
 
-function Membership() {
+function Membership({ onLogout }) {
   const [members, setMembers] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -44,7 +44,7 @@ function Membership() {
     total: members.length,
     active: members.filter((m) => getMemberStatus(m) === "Active").length,
     expired: members.filter((m) => getMemberStatus(m) === "Expired").length,
-    totalBookValue: members.reduce((sum, m) => sum + (parseFloat(m.bookValue) || 0), 0).toFixed(2)
+    totalBookValue: members.reduce((sum, m) => sum + (parseFloat(m.bookValue) || 0), 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
   };
 
   // Filter members based on search
@@ -238,6 +238,10 @@ function Membership() {
             </div>
           </div>
         </nav>
+
+        <div className="sidebar-footer">
+          <button className="sidebar-footer-btn" onClick={() => { sessionStorage.removeItem('hcm_authenticated'); onLogout(); }}>🚪 Sign Out</button>
+        </div>
       </aside>
 
       {/* Main Content */}
@@ -370,6 +374,35 @@ function Membership() {
           </div>
         </div>
 
+        {/* Top 3 Highest Book Value */}
+        <div className="top-members-card">
+          <div className="top-members-header">
+            <div className="top-members-title">🏆 Top 3 Highest Lifetime Book Value</div>
+          </div>
+          <div className="top-members-list">
+            {[...members]
+              .sort((a, b) => (parseFloat(b.bookValue) || 0) - (parseFloat(a.bookValue) || 0))
+              .slice(0, 3)
+              .map((m, index) => (
+                <div className={`top-member-item rank-${index + 1}`} key={m.id}>
+                  <div className="top-member-rank">
+                    {index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉"}
+                  </div>
+                  <div className="top-member-info">
+                    <div className="top-member-name">{m.name}</div>
+                    <div className="top-member-status">
+                      <span className={`status-badge ${getMemberStatus(m).toLowerCase()}`}>{getMemberStatus(m)}</span>
+                    </div>
+                  </div>
+                  <div className="top-member-value">₱{parseFloat(m.bookValue || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                </div>
+              ))}
+            {members.length === 0 && (
+              <div className="top-members-empty">No members yet</div>
+            )}
+          </div>
+        </div>
+
         {/* Members Table */}
         <div className="table-card">
           <div className="table-header">
@@ -419,7 +452,7 @@ function Membership() {
                       </td>
                       <td data-label="Start">{m.startDate || "—"}</td>
                       <td data-label="End">{m.endDate || "—"}</td>
-                      <td data-label="Book Value">₱{parseFloat(m.bookValue || 0).toFixed(2)}</td>
+                      <td data-label="Book Value">₱{parseFloat(m.bookValue || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                       <td data-label="Status">
                         <span className={`status-badge ${status === "Expired" ? "expired" : "active"}`}>
                           {status}
