@@ -233,7 +233,7 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
     const headers = ["#", "Member Name", "Start Date", "End Date", "Lifetime Book Value", "Status", "Action"];
     const widths = [8, 42, 28, 28, 28, 22, 24];
     let x = margin;
-  
+    
     // Header row
     const headerHeight = 15;
     doc.setFillColor(...BRAND.gold);
@@ -437,8 +437,33 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
       }} onClick={e => e.stopPropagation()}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 30, flexWrap: "wrap", gap: 12 }}>
           <h2 style={{ color: "#2C2C2C", margin: 0, fontSize: "clamp(18px, 4vw, 24px)" }}>Transaction History</h2>
-          <button
-            onClick={generatePDF}
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <button
+              onClick={onClose}
+              style={{
+                background: "#fff",
+                color: "#2c2c2c",
+                padding: "12px 24px",
+                border: "2px solid #e8dcc8",
+                borderRadius: 8,
+                fontWeight: 600,
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                fontSize: 14
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.borderColor = "#d4af37";
+                e.target.style.color = "#d4af37";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.borderColor = "#e8dcc8";
+                e.target.style.color = "#2c2c2c";
+              }}
+            >
+              ✕ Close
+            </button>
+            <button
+              onClick={generatePDF}
             style={{
               background: "#D4AF37",
               color: "#fff",
@@ -469,6 +494,7 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
           >
             📄 Export to PDF
           </button>
+          </div>
         </div>
 
         {/* Filter Section */}

@@ -407,7 +407,16 @@ function Membership() {
                   const status = getMemberStatus(m);
                   return (
                     <tr key={m.id}>
-                      <td className="member-name">{m.name}</td>
+                      <td className="member-name">
+                        {m.name}
+                        <button
+                          className="mobile-card-close"
+                          onClick={() => handleDeleteMember(m.id, m.name)}
+                          title="Delete member"
+                        >
+                          ×
+                        </button>
+                      </td>
                       <td data-label="Start">{m.startDate || "—"}</td>
                       <td data-label="End">{m.endDate || "—"}</td>
                       <td data-label="Book Value">₱{parseFloat(m.bookValue || 0).toFixed(2)}</td>

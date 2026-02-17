@@ -780,6 +780,11 @@
   opacity: 0.5;
 }
 
+/* Mobile close button - hidden on desktop */
+.mobile-card-close {
+  display: none;
+}
+
 /* Mobile sidebar overlay - hidden on desktop */
 .sidebar-overlay {
   display: none;
@@ -919,20 +924,39 @@
     flex-direction: column;
     gap: 8px;
     margin-bottom: 12px;
+    align-items: flex-start;
   }
 
   .chart-card-title {
     font-size: 14px;
   }
 
+  .chart-legend {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
   .bar-chart {
     gap: 24px;
-    height: 140px;
-    padding: 12px 0;
+    height: auto;
+    min-height: 120px;
+    padding: 16px 0 12px;
   }
 
   .bar {
     width: 48px;
+  }
+
+  .bar-item {
+    gap: 6px;
+  }
+
+  .bar-value {
+    font-size: 13px;
+  }
+
+  .bar-label {
+    font-size: 11px;
   }
 
   .donut-chart {
@@ -979,28 +1003,42 @@
   }
 
   .data-table,
-  .data-table tbody,
-  .data-table tr,
-  .data-table td {
+  .data-table tbody {
     display: block;
     width: 100%;
   }
 
+  .data-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+  }
+
   .data-table tr {
-    padding: 14px 16px;
-    border-bottom: 1px solid #f0e6d2;
+    display: block;
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px;
+    border: 1px solid #f0e6d2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     position: relative;
+    transition: all 0.2s ease;
   }
 
   .data-table tbody tr:hover {
-    background-color: #fef8f0;
+    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.12);
+    border-color: #d4af37;
   }
 
   .data-table td {
-    padding: 4px 0;
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
     border-bottom: none;
     font-size: 13px;
     text-align: left !important;
+    width: 100%;
   }
 
   .data-table td::before {
@@ -1008,45 +1046,91 @@
     display: inline-block;
     font-size: 10px;
     font-weight: 700;
-    color: #999;
+    color: #b8860b;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-right: 8px;
-    min-width: 90px;
+    min-width: 85px;
+    flex-shrink: 0;
   }
 
+  /* Member name - card title */
   .data-table td:first-child {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
     color: #2c2c2c;
-    padding-bottom: 6px;
-    border-bottom: 1px solid #f5f0e5;
-    margin-bottom: 6px;
+    padding-bottom: 10px;
+    margin-bottom: 8px;
+    border-bottom: 2px solid #f5f0e5;
+    padding-right: 36px;
   }
 
   .data-table td:first-child::before {
     display: none;
   }
 
+  /* Actions row */
   .data-table td:last-child {
-    padding-top: 8px;
+    padding-top: 10px;
+    margin-top: 4px;
+    border-top: 1px solid #f5f0e5;
   }
 
   .data-table td:last-child::before {
     display: none;
   }
 
+  /* Mobile close/delete button on each card */
+  .mobile-card-close {
+    display: flex !important;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #ffebee;
+    color: #c62828;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 2;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .mobile-card-close:hover {
+    background: #c62828;
+    color: #fff;
+    transform: scale(1.1);
+  }
+
   .action-buttons {
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 8px;
+    width: 100%;
   }
 
   .action-btn {
     flex: 1;
-    min-width: 60px;
+    min-width: 70px;
     text-align: center;
-    padding: 8px 10px;
-    font-size: 10px;
+    padding: 9px 12px;
+    font-size: 11px;
+    border-radius: 8px;
+  }
+
+  .action-btn.delete {
+    display: none;
+  }
+
+  /* Status badge in card */
+  .status-badge {
+    font-size: 10px !important;
+    padding: 3px 10px !important;
   }
 
   .sidebar-toggle-btn {
@@ -1062,7 +1146,7 @@
 
 @media (max-width: 480px) {
   .main-content {
-    padding: 12px;
+    padding: 10px;
   }
 
   .analytics-grid {
@@ -1072,14 +1156,72 @@
 
   .analytics-card {
     padding: 12px;
+    border-radius: 10px;
   }
 
   .analytics-card-value {
     font-size: 18px;
   }
 
+  .analytics-card-label {
+    font-size: 9px;
+  }
+
+  .analytics-card-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+    border-radius: 8px;
+  }
+
   .main-header-left h1 {
     font-size: 16px;
+  }
+
+  .main-header-left p {
+    font-size: 10px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 10px 14px;
+    font-size: 11px;
+    border-radius: 10px;
+  }
+
+  .table-header {
+    padding: 12px;
+  }
+
+  .table-title {
+    font-size: 14px;
+  }
+
+  .data-table tbody {
+    padding: 8px;
+    gap: 10px;
+  }
+
+  .data-table tr {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .data-table td:first-child {
+    font-size: 15px;
+  }
+
+  .chart-card {
+    padding: 14px;
+    border-radius: 10px;
+  }
+
+  .empty-state {
+    padding: 40px 16px;
+  }
+
+  .empty-state-icon {
+    font-size: 36px;
   }
 }
 
