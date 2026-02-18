@@ -178,7 +178,7 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
     
     const summaryRow1 = [
       { label: "Total Members:", value: String(members.length) },
-      { label: "Total Lifetime Book Value:", value: `P${(totalValue || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` },
+      { label: "Total Lifetime Book Value:", value: "P" + (totalValue || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") },
       { label: "Active:", value: String(activeCount) },
       { label: "Expired:", value: String(expiredCount) }
     ];
@@ -197,7 +197,7 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
 
     // Summary items - Row 2
     const summaryRow2 = [
-      { label: "Avg. Lifetime Book Value:", value: `P${(avgValue || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` },
+      { label: "Avg. Lifetime Book Value:", value: "P" + (avgValue || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") },
       { label: "Active Rate:", value: `${members.length > 0 ? ((activeCount / members.length) * 100).toFixed(1) : 0}%` }
     ];
 
@@ -242,7 +242,7 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
         doc.text(m.name || "—", margin + 20, rowY);
         doc.setFont(undefined, "bold");
         doc.setTextColor(...BRAND.darkGold);
-        const val = `P${parseFloat(m.bookValue || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        const val = "P" + parseFloat(m.bookValue || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         doc.text(val, margin + contentWidth - 6, rowY, { align: "right" });
       });
 
@@ -305,9 +305,22 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
     doc.setFont(undefined, "normal");
     doc.setTextColor(...BRAND.charcoal);
     
-    // Table rows with improved layout
-    const rowHeight = 9;
+    // Table rows with dynamic height based on changes
+    const baseRowHeight = 9;
     filteredTransactions.forEach((t, i) => {
+      const action = t.action || "Updated";
+      const hasChanges = (action === "Updated" || action === "Reactivated") && t.changes && t.changes !== "No changes";
+      // Split long changes string into lines of ~3 items each
+      const changeLines = hasChanges
+        ? t.changes.split(", ").reduce((lines, item, idx) => {
+            if (idx % 2 === 0) lines.push([]);
+            lines[lines.length - 1].push(item);
+            return lines;
+          }, []).map(g => g.join(", "))
+        : [];
+      const extraHeight = changeLines.length > 0 ? changeLines.length * 4.5 : 0;
+      const rowHeight = baseRowHeight + extraHeight;
+
       if (y > pageHeight - 45) {
         addNewPage();
       }
@@ -321,37 +334,39 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
       // Row border
       doc.setDrawColor(240, 230, 210);
       doc.setLineWidth(0.1);
-      doc.line(margin, y + 3, pageWidth - margin, y + 3);
+      doc.line(margin, y + rowHeight - 6, pageWidth - margin, y + rowHeight - 6);
       
       x = margin;
       doc.setFontSize(8);
+
+      const midY = y + extraHeight / 2;
       
       // Row number
       doc.setTextColor(...BRAND.gray);
-      doc.text(String(i + 1), x + widths[0] / 2, y, { align: "center" });
+      doc.text(String(i + 1), x + widths[0] / 2, midY, { align: "center" });
       x += widths[0];
       
       // Member name with better truncation
       doc.setFont(undefined, "bold");
       doc.setTextColor(...BRAND.charcoal);
       const name = t.name || "—";
-      doc.text(name.length > 18 ? name.substring(0, 16) + "..." : name, x + 2, y);
+      doc.text(name.length > 18 ? name.substring(0, 16) + "..." : name, x + 2, midY);
       x += widths[1];
       
       // Start Date
       doc.setFont(undefined, "normal");
-      doc.text(t.startDate || "—", x + widths[2] / 2, y, { align: "center" });
+      doc.text(t.startDate || "—", x + widths[2] / 2, midY, { align: "center" });
       x += widths[2];
       
       // End Date
-      doc.text(t.endDate || "—", x + widths[3] / 2, y, { align: "center" });
+      doc.text(t.endDate || "—", x + widths[3] / 2, midY, { align: "center" });
       x += widths[3];
       
       // Lifetime Book Value with better formatting
       doc.setFont(undefined, "bold");
       doc.setTextColor(46, 125, 50);
-      const bookValueText = `P${parseFloat(t.bookValue || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      doc.text(bookValueText, x + widths[4] - 2, y, { align: "right" });
+      const bookValueText = "P" + parseFloat(t.bookValue || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      doc.text(bookValueText, x + widths[4] - 2, midY, { align: "right" });
       x += widths[4];
       
       // Status badge with improved styling
@@ -369,18 +384,26 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
         doc.setTextColor(198, 40, 40);
       }
       
-      doc.roundedRect(x + 2, y - 3.5, widths[5] - 4, 5.5, 1, 1, "F");
+      doc.roundedRect(x + 2, midY - 3.5, widths[5] - 4, 5.5, 1, 1, "F");
       doc.setFontSize(7);
       doc.setFont(undefined, "bold");
-      doc.text(t.status || "—", x + widths[5] / 2, y - 0.3, { align: "center" });
+      doc.text(t.status || "—", x + widths[5] / 2, midY - 0.3, { align: "center" });
       x += widths[5];
       
-      // Action with better text handling
+      // Action + changes detail
       doc.setFontSize(8);
-      doc.setFont(undefined, "normal");
+      doc.setFont(undefined, "bold");
       doc.setTextColor(...BRAND.charcoal);
-      const action = t.action || "Updated";
-      doc.text(action, x + widths[6] / 2, y, { align: "center" });
+      const actionLabelY = hasChanges ? y : midY;
+      doc.text(action, x + widths[6] / 2, actionLabelY, { align: "center" });
+      if (hasChanges && changeLines.length > 0) {
+        doc.setFont(undefined, "normal");
+        doc.setFontSize(6);
+        doc.setTextColor(...BRAND.darkGold);
+        changeLines.forEach((line, li) => {
+          doc.text(line, x + widths[6] / 2, actionLabelY + 4 + li * 4.5, { align: "center" });
+        });
+      }
       
       y += rowHeight;
     });
@@ -406,9 +429,14 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
     doc.setTextColor(...BRAND.charcoal);
     doc.text(`Total Transactions: ${filteredTransactions.length}`, margin + 6, y + 9);
 
-    const filteredBookTotal = filteredTransactions.reduce((sum, t) => sum + (parseFloat(t.bookValue) || 0), 0);
+    const filteredMemberNames = [...new Set(filteredTransactions.map(t => t.name))];
+    const filteredBookTotal = filteredMemberNames.reduce((sum, name) => {
+      const member = members.find(m => m.name === name);
+      return sum + (member ? (parseFloat(member.bookValue) || 0) : 0);
+    }, 0);
+    const filteredBookFormatted = filteredBookTotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     doc.setTextColor(...BRAND.darkGold);
-    doc.text(`Total Lifetime Book Value: P${filteredBookTotal.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, margin + contentWidth - 6, y + 9, { align: "right" });
+    doc.text("Total Lifetime Book Value: P" + filteredBookFormatted, margin + contentWidth - 6, y + 9, { align: "right" });
 
     addFooter(doc, pageWidth, pageHeight, margin);
     doc.save("hello_club_transaction_history.pdf");
@@ -747,7 +775,12 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
                         {t.status || "—"}
                       </span>
                     </td>
-                    <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0e6d2", color: "#2c2c2c", fontSize: 14, textAlign: "center", whiteSpace: "nowrap" }}>{t.action || "Updated"}</td>
+                    <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0e6d2", color: "#2c2c2c", fontSize: 14, textAlign: "center" }}>
+                      <div style={{ fontWeight: 600 }}>{t.action || "Updated"}</div>
+                      {(t.action === "Updated" || t.action === "Reactivated") && t.changes && t.changes !== "No changes" && (
+                        <div style={{ fontSize: 11, color: "#B8860B", marginTop: 3, whiteSpace: "normal", lineHeight: 1.4 }}>{t.changes}</div>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
