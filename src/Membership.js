@@ -96,6 +96,29 @@ function Membership({ onLogout }) {
         // Update existing member (edit or reactivate)
         await updateDoc(doc(db, "members", editingMember.id), memberData);
 
+        // Detect what changed between old and new values
+        const changeLabels = {
+          name: "Name",
+          startDate: "Start Date",
+          endDate: "End Date",
+          bookValue: "Book Value",
+          email: "Email",
+          mobile: "Mobile",
+          address: "Address",
+          gender: "Gender",
+          birthDate: "Birth Date",
+          isSenior: "Senior",
+          isPWD: "PWD",
+          idType: "ID Type",
+          idNumber: "ID Number"
+        };
+        const changedFields = Object.keys(changeLabels).filter(key => {
+          const oldVal = String(editingMember[key] ?? "");
+          const newVal = String(memberData[key] ?? "");
+          return oldVal !== newVal;
+        }).map(key => changeLabels[key]);
+        const changesText = changedFields.length > 0 ? changedFields.join(", ") : "No changes";
+
         // Add transaction record to Firebase
         const newTransaction = {
           name: memberData.name,
@@ -104,7 +127,8 @@ function Membership({ onLogout }) {
           bookValue: memberData.bookValue,
           status: getMemberStatus(memberData),
           timestamp: new Date().toLocaleString(),
-          action: reactivateMode ? "Reactivated" : "Updated"
+          action: reactivateMode ? "Reactivated" : "Updated",
+          changes: changesText
         };
         await addDoc(transactionCollection, newTransaction);
         await getTransactions();

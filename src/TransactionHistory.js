@@ -282,9 +282,33 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
     
     y += 5;
     
-    // Table headers with balanced widths (total = 180mm to fit contentWidth)
+    // Table headers with auto-adjust for Member Name column
     const headers = ["#", "Member Name", "Start Date", "End Date", "Lifetime Book Value", "Status", "Action"];
-    const widths = [8, 42, 28, 28, 28, 22, 24];
+    // Calculate optimal name column width based on longest name
+    doc.setFontSize(8);
+    doc.setFont(undefined, "bold");
+    const longestName = filteredTransactions.reduce((max, t) => {
+      const name = t.name || "—";
+      return doc.getTextWidth(name) > doc.getTextWidth(max) ? name : max;
+    }, "Member Name");
+    const nameTextWidth = doc.getTextWidth(longestName) + 6; // add padding
+    // Other columns: #, StartDate, EndDate, BookValue, Status, Action
+    const otherColWidths = [8, 22, 22, 26, 20, 22]; // compact sizing
+    const otherTotal = otherColWidths.reduce((s, w) => s + w, 0); // = 120
+    const maxNameWidth = contentWidth - otherTotal; // all remaining space
+    const minNameWidth = 42;
+    const finalNameWidth = Math.max(Math.min(nameTextWidth, maxNameWidth), minNameWidth);
+    // If name col doesn't use all available space, distribute extra to other cols
+    const extraSpace = maxNameWidth - finalNameWidth;
+    const widths = [
+      otherColWidths[0],                                          // #
+      finalNameWidth,                                             // Member Name
+      otherColWidths[1] + extraSpace * (otherColWidths[1] / otherTotal), // Start Date
+      otherColWidths[2] + extraSpace * (otherColWidths[2] / otherTotal), // End Date
+      otherColWidths[3] + extraSpace * (otherColWidths[3] / otherTotal), // Book Value
+      otherColWidths[4] + extraSpace * (otherColWidths[4] / otherTotal), // Status
+      otherColWidths[5] + extraSpace * (otherColWidths[5] / otherTotal), // Action
+    ];
     let x = margin;
 
     // Header row
@@ -346,11 +370,20 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
       doc.text(String(i + 1), x + widths[0] / 2, midY, { align: "center" });
       x += widths[0];
       
-      // Member name with better truncation
+      // Member name - auto-fitted column
       doc.setFont(undefined, "bold");
       doc.setTextColor(...BRAND.charcoal);
       const name = t.name || "—";
-      doc.text(name.length > 18 ? name.substring(0, 16) + "..." : name, x + 2, midY);
+      // Truncate only if text still exceeds the column width
+      const nameMaxW = widths[1] - 4;
+      let displayName = name;
+      if (doc.getTextWidth(name) > nameMaxW) {
+        while (doc.getTextWidth(displayName + "...") > nameMaxW && displayName.length > 0) {
+          displayName = displayName.slice(0, -1);
+        }
+        displayName += "...";
+      }
+      doc.text(displayName, x + 2, midY);
       x += widths[1];
       
       // Start Date
@@ -427,7 +460,6 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
     doc.setFontSize(8);
     doc.setFont(undefined, "bold");
     doc.setTextColor(...BRAND.charcoal);
-    doc.text(`Total Transactions: ${filteredTransactions.length}`, margin + 6, y + 9);
 
     const filteredMemberNames = [...new Set(filteredTransactions.map(t => t.name))];
     const filteredBookTotal = filteredMemberNames.reduce((sum, name) => {
@@ -435,6 +467,9 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
       return sum + (member ? (parseFloat(member.bookValue) || 0) : 0);
     }, 0);
     const filteredBookFormatted = filteredBookTotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    doc.text(`Total Transactions: ${filteredTransactions.length}`, margin + 6, y + 9);
+    doc.text(`Total Members: ${hasActiveFilters ? filteredMemberNames.length : members.length}`, margin + 60, y + 9);
     doc.setTextColor(...BRAND.darkGold);
     doc.text("Total Lifetime Book Value: P" + filteredBookFormatted, margin + contentWidth - 6, y + 9, { align: "right" });
 
@@ -468,6 +503,19 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
   if (!isOpen) return null;
 
   return (
+    <>
+    <style>{`
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes slideUpFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes rowFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes rowSlideIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+      @keyframes countPulse { 0% { opacity: 0.5; transform: scale(0.97); } 100% { opacity: 1; transform: scale(1); } }
+      .tx-row { animation: rowFadeIn 0.3s ease-out both; }
+      .tx-row:hover { background-color: #f5f0e4 !important; transition: background-color 0.2s ease; }
+      .tx-empty { animation: rowSlideIn 0.4s ease-out both; }
+      .tx-count { animation: countPulse 0.3s ease-out both; }
+      .tx-tfoot { animation: rowFadeIn 0.35s ease-out 0.1s both; }
+    `}</style>
     <div className="transaction-modal-overlay" style={{
       position: "fixed",
       inset: 0,
@@ -698,18 +746,18 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
 
         {/* Results count */}
         {hasActiveFilters && (
-          <div style={{ marginBottom: 16, fontSize: 14, color: "#666" }}>
+          <div className="tx-count" key={`count-${filteredTransactions.length}`} style={{ marginBottom: 16, fontSize: 14, color: "#666" }}>
             Showing {filteredTransactions.length} of {transactions.length} transactions
           </div>
         )}
 
         {transactions.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "40px", color: "#999" }}>
+          <div className="tx-empty" style={{ textAlign: "center", padding: "40px", color: "#999" }}>
             <div style={{ fontSize: 48, marginBottom: 16, opacity: 0.5 }}>📭</div>
             <p>No transactions yet.</p>
           </div>
         ) : filteredTransactions.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "40px", color: "#999" }}>
+          <div className="tx-empty" style={{ textAlign: "center", padding: "40px", color: "#999" }}>
             <div style={{ fontSize: 48, marginBottom: 16, opacity: 0.5 }}>🔍</div>
             <p>No transactions match your filters.</p>
             <button
@@ -750,15 +798,16 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
               </thead>
               <tbody>
                 {filteredTransactions.map((t, idx) => (
-                  <tr key={idx} style={{ 
+                  <tr key={`${t.name}-${idx}`} className="tx-row" style={{ 
                     borderBottom: "1px solid #f0e6d2",
-                    backgroundColor: idx % 2 === 0 ? "#fff" : "#faf8f4"
+                    backgroundColor: idx % 2 === 0 ? "#fff" : "#faf8f4",
+                    animationDelay: `${idx * 0.03}s`
                   }}>
                     <td style={{ padding: "12px 8px", borderBottom: "1px solid #f0e6d2", color: "#888", fontSize: 14, textAlign: "center", fontWeight: 500 }}>{idx + 1}</td>
                     <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0e6d2", color: "#2c2c2c", fontSize: 14, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.name || "—"}</td>
                     <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0e6d2", color: "#2c2c2c", fontSize: 14, textAlign: "center", whiteSpace: "nowrap" }}>{t.startDate || "—"}</td>
                     <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0e6d2", color: "#2c2c2c", fontSize: 14, textAlign: "center", whiteSpace: "nowrap" }}>{t.endDate || "—"}</td>
-                    <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0e6d2", color: "#2e7d32", fontSize: 14, fontWeight: 600, textAlign: "right", whiteSpace: "nowrap" }}>₱{parseFloat(t.bookValue || 0).toFixed(2)}</td>
+                    <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0e6d2", color: "#2e7d32", fontSize: 14, fontWeight: 600, textAlign: "right", whiteSpace: "nowrap" }}>₱{parseFloat(t.bookValue || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
                     <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0e6d2", color: "#2c2c2c", fontSize: 14, textAlign: "center" }}>
                       <span style={{
                         padding: "5px 12px",
@@ -784,11 +833,32 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
                   </tr>
                 ))}
               </tbody>
+              <tfoot className="tx-tfoot">
+                <tr style={{ backgroundColor: "#faf8f4", borderTop: "2px solid #D4AF37" }}>
+                  <td colSpan={2} style={{ padding: "14px 12px", fontSize: 13, fontWeight: 700, color: "#2c2c2c" }}>
+                    Total Transactions: {filteredTransactions.length}
+                  </td>
+                  <td colSpan={2} style={{ padding: "14px 12px", fontSize: 13, fontWeight: 700, color: "#2c2c2c", textAlign: "center" }}>
+                    Total Members: {hasActiveFilters ? [...new Set(filteredTransactions.map(t => t.name))].length : members.length}
+                  </td>
+                  <td style={{ padding: "14px 12px", fontSize: 13, fontWeight: 700, color: "#B8860B", textAlign: "right", whiteSpace: "nowrap" }}>
+                    ₱{(() => {
+                      const names = [...new Set(filteredTransactions.map(t => t.name))];
+                      return names.reduce((sum, name) => {
+                        const member = members.find(m => m.name === name);
+                        return sum + (member ? (parseFloat(member.bookValue) || 0) : 0);
+                      }, 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    })()}
+                  </td>
+                  <td colSpan={2} />
+                </tr>
+              </tfoot>
             </table>
           </div>
         )}
       </div>
     </div>
+    </>
   );
 };
 
