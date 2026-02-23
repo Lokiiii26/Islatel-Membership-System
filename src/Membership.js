@@ -205,6 +205,24 @@ function Membership({ onLogout }) {
     setModalOpen(true);
   };
 
+  // Download CSV
+  const handleDownloadCSV = () => {
+    const headers = ["Name", "Contact Number", "Email"];
+    const rows = members.map((m) => [
+      `"${(m.name || "").replace(/"/g, '""')}"`,
+      `"${(m.mobile || "").replace(/"/g, '""')}"`,
+      `"${(m.email || "").replace(/"/g, '""')}"`
+    ]);
+    const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `members_${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   // Open add member modal
   const handleOpenAddModal = () => {
     setEditingMember(null);
@@ -290,6 +308,9 @@ function Membership({ onLogout }) {
             </div>
           </div>
           <div className="header-actions">
+            <button className="btn-secondary" onClick={handleDownloadCSV}>
+              📥 Download CSV
+            </button>
             <button className="btn-secondary" onClick={() => setTransactionHistoryOpen(true)}>
               📄 Export Report
             </button>
