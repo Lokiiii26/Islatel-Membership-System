@@ -519,47 +519,50 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
     <div className="transaction-modal-overlay" style={{
       position: "fixed",
       inset: 0,
-      background: "rgba(0,0,0,.5)",
+      background: "rgba(0,0,0,.6)",
+      backdropFilter: "blur(6px)",
+      WebkitBackdropFilter: "blur(6px)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       zIndex: 999,
-      animation: "fadeIn 0.3s ease-out"
+      animation: "fadeIn 0.25s ease-out"
     }} onClick={onClose}>
       <div className="transaction-modal-content" style={{
         background: "#fff",
-        borderRadius: 12,
+        borderRadius: 16,
         padding: "clamp(16px, 4vw, 40px)",
         maxWidth: 1000,
         width: "95%",
         maxHeight: "90vh",
         overflowY: "auto",
-        boxShadow: "0 20px 60px rgba(0,0,0,.3)",
-        animation: "slideUpFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1)"
+        boxShadow: "0 24px 48px rgba(0,0,0,.2), 0 0 0 1px rgba(0,0,0,.05)",
+        animation: "slideUpFadeIn 0.35s cubic-bezier(0.22, 1, 0.36, 1)"
       }} onClick={e => e.stopPropagation()}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 30, flexWrap: "wrap", gap: 12 }}>
-          <h2 style={{ color: "#2C2C2C", margin: 0, fontSize: "clamp(18px, 4vw, 24px)" }}>Transaction History</h2>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28, flexWrap: "wrap", gap: 12 }}>
+          <h2 style={{ color: "#171717", margin: 0, fontSize: "clamp(18px, 4vw, 24px)", fontFamily: "'Playfair Display', serif", fontWeight: 700, letterSpacing: "-0.3px" }}>Transaction History</h2>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <button
               onClick={onClose}
               style={{
                 background: "#fff",
-                color: "#2c2c2c",
-                padding: "12px 24px",
-                border: "2px solid #e8dcc8",
-                borderRadius: 8,
+                color: "#525252",
+                padding: "11px 22px",
+                border: "1.5px solid #e5e5e5",
+                borderRadius: 10,
                 fontWeight: 600,
                 cursor: "pointer",
-                transition: "all 0.3s ease",
-                fontSize: 14
+                transition: "all 0.25s ease",
+                fontSize: 13,
+                fontFamily: "'Inter', sans-serif"
               }}
               onMouseEnter={(e) => {
                 e.target.style.borderColor = "#d4af37";
-                e.target.style.color = "#d4af37";
+                e.target.style.color = "#b8960e";
               }}
               onMouseLeave={(e) => {
-                e.target.style.borderColor = "#e8dcc8";
-                e.target.style.color = "#2c2c2c";
+                e.target.style.borderColor = "#e5e5e5";
+                e.target.style.color = "#525252";
               }}
             >
               ✕ Close
@@ -567,25 +570,25 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
             <button
               onClick={generatePDF}
             style={{
-              background: "#D4AF37",
+              background: "linear-gradient(135deg, #f2ce5b, #b8960e)",
               color: "#fff",
-              padding: "12px 24px",
+              padding: "11px 22px",
               border: "none",
-              borderRadius: 8,
+              borderRadius: 10,
               fontWeight: 700,
               cursor: "pointer",
-              transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-              boxShadow: "0 4px 12px rgba(212, 175, 55, 0.3)"
+              transition: "all 0.3s cubic-bezier(0.22, 1, 0.36, 1)",
+              boxShadow: "0 4px 14px rgba(212, 175, 55, 0.3)",
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 13
             }}
             onMouseEnter={(e) => { 
-              e.target.style.background = "#B8860B"; 
               e.target.style.transform = "translateY(-2px)"; 
-              e.target.style.boxShadow = "0 6px 16px rgba(212, 175, 55, 0.4)";
+              e.target.style.boxShadow = "0 8px 20px rgba(212, 175, 55, 0.4)";
             }}
             onMouseLeave={(e) => { 
-              e.target.style.background = "#D4AF37"; 
               e.target.style.transform = "translateY(0)"; 
-              e.target.style.boxShadow = "0 4px 12px rgba(212, 175, 55, 0.3)";
+              e.target.style.boxShadow = "0 4px 14px rgba(212, 175, 55, 0.3)";
             }}
             onMouseDown={(e) => { 
               e.target.style.transform = "translateY(0) scale(0.98)"; 
@@ -603,16 +606,16 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
         <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-          gap: 16,
+          gap: 14,
           marginBottom: 24,
           padding: 20,
-          backgroundColor: "#faf8f4",
-          borderRadius: 10,
-          border: "1px solid #f0e6d2"
+          backgroundColor: "#fafafa",
+          borderRadius: 12,
+          border: "1.5px solid #f0f0f0"
         }}>
           {/* Search by Name */}
           <div>
-            <label style={{ display: "block", marginBottom: 6, fontSize: 12, fontWeight: 600, color: "#666", textTransform: "uppercase" }}>Search Name</label>
+            <label style={{ display: "block", marginBottom: 6, fontSize: 11, fontWeight: 600, color: "#737373", textTransform: "uppercase", letterSpacing: "0.8px" }}>Search Name</label>
             <input
               type="text"
               placeholder="Search member..."
@@ -621,34 +624,37 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
               style={{
                 width: "100%",
                 padding: "10px 12px",
-                border: "1px solid #ddd",
-                borderRadius: 6,
-                fontSize: 14,
+                border: "1.5px solid #e5e5e5",
+                borderRadius: 8,
+                fontSize: 13,
                 outline: "none",
-                transition: "border-color 0.2s",
-                boxSizing: "border-box"
+                transition: "all 0.25s ease",
+                boxSizing: "border-box",
+                fontFamily: "'Inter', sans-serif",
+                backgroundColor: "#fff"
               }}
-              onFocus={(e) => e.target.style.borderColor = "#D4AF37"}
-              onBlur={(e) => e.target.style.borderColor = "#ddd"}
+              onFocus={(e) => { e.target.style.borderColor = "#d4af37"; e.target.style.boxShadow = "0 0 0 3px rgba(212,175,55,0.1)"; }}
+              onBlur={(e) => { e.target.style.borderColor = "#e5e5e5"; e.target.style.boxShadow = "none"; }}
             />
           </div>
 
           {/* Status Filter */}
           <div>
-            <label style={{ display: "block", marginBottom: 6, fontSize: 12, fontWeight: 600, color: "#666", textTransform: "uppercase" }}>Status</label>
+            <label style={{ display: "block", marginBottom: 6, fontSize: 11, fontWeight: 600, color: "#737373", textTransform: "uppercase", letterSpacing: "0.8px" }}>Status</label>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
               style={{
                 width: "100%",
                 padding: "10px 12px",
-                border: "1px solid #ddd",
-                borderRadius: 6,
-                fontSize: 14,
+                border: "1.5px solid #e5e5e5",
+                borderRadius: 8,
+                fontSize: 13,
                 outline: "none",
                 backgroundColor: "#fff",
                 cursor: "pointer",
-                boxSizing: "border-box"
+                boxSizing: "border-box",
+                fontFamily: "'Inter', sans-serif"
               }}
             >
               <option value="All">All Statuses</option>
@@ -659,20 +665,21 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
 
           {/* Action Filter */}
           <div>
-            <label style={{ display: "block", marginBottom: 6, fontSize: 12, fontWeight: 600, color: "#666", textTransform: "uppercase" }}>Action</label>
+            <label style={{ display: "block", marginBottom: 6, fontSize: 11, fontWeight: 600, color: "#737373", textTransform: "uppercase", letterSpacing: "0.8px" }}>Action</label>
             <select
               value={actionFilter}
               onChange={(e) => setActionFilter(e.target.value)}
               style={{
                 width: "100%",
                 padding: "10px 12px",
-                border: "1px solid #ddd",
-                borderRadius: 6,
-                fontSize: 14,
+                border: "1.5px solid #e5e5e5",
+                borderRadius: 8,
+                fontSize: 13,
                 outline: "none",
                 backgroundColor: "#fff",
                 cursor: "pointer",
-                boxSizing: "border-box"
+                boxSizing: "border-box",
+                fontFamily: "'Inter', sans-serif"
               }}
             >
               {uniqueActions.map(action => (
@@ -683,7 +690,7 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
 
           {/* Start Date Filter */}
           <div>
-            <label style={{ display: "block", marginBottom: 6, fontSize: 12, fontWeight: 600, color: "#666", textTransform: "uppercase" }}>From Date</label>
+            <label style={{ display: "block", marginBottom: 6, fontSize: 11, fontWeight: 600, color: "#737373", textTransform: "uppercase", letterSpacing: "0.8px" }}>From Date</label>
             <input
               type="date"
               value={startDateFilter}
@@ -691,18 +698,20 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
               style={{
                 width: "100%",
                 padding: "10px 12px",
-                border: "1px solid #ddd",
-                borderRadius: 6,
-                fontSize: 14,
+                border: "1.5px solid #e5e5e5",
+                borderRadius: 8,
+                fontSize: 13,
                 outline: "none",
-                boxSizing: "border-box"
+                boxSizing: "border-box",
+                fontFamily: "'Inter', sans-serif",
+                backgroundColor: "#fff"
               }}
             />
           </div>
 
           {/* End Date Filter */}
           <div>
-            <label style={{ display: "block", marginBottom: 6, fontSize: 12, fontWeight: 600, color: "#666", textTransform: "uppercase" }}>To Date</label>
+            <label style={{ display: "block", marginBottom: 6, fontSize: 11, fontWeight: 600, color: "#737373", textTransform: "uppercase", letterSpacing: "0.8px" }}>To Date</label>
             <input
               type="date"
               value={endDateFilter}
@@ -710,11 +719,13 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
               style={{
                 width: "100%",
                 padding: "10px 12px",
-                border: "1px solid #ddd",
-                borderRadius: 6,
-                fontSize: 14,
+                border: "1.5px solid #e5e5e5",
+                borderRadius: 8,
+                fontSize: 13,
                 outline: "none",
-                boxSizing: "border-box"
+                boxSizing: "border-box",
+                fontFamily: "'Inter', sans-serif",
+                backgroundColor: "#fff"
               }}
             />
           </div>
@@ -727,17 +738,18 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
               style={{
                 width: "100%",
                 padding: "10px 12px",
-                border: "1px solid #D4AF37",
-                borderRadius: 6,
-                fontSize: 14,
+                border: "1.5px solid #d4af37",
+                borderRadius: 8,
+                fontSize: 13,
                 fontWeight: 600,
                 backgroundColor: hasActiveFilters ? "#fff" : "#f5f5f5",
-                color: hasActiveFilters ? "#D4AF37" : "#999",
+                color: hasActiveFilters ? "#b8960e" : "#a3a3a3",
                 cursor: hasActiveFilters ? "pointer" : "not-allowed",
-                transition: "all 0.2s"
+                transition: "all 0.25s ease",
+                fontFamily: "'Inter', sans-serif"
               }}
-              onMouseEnter={(e) => hasActiveFilters && (e.target.style.backgroundColor = "#D4AF37", e.target.style.color = "#fff")}
-              onMouseLeave={(e) => hasActiveFilters && (e.target.style.backgroundColor = "#fff", e.target.style.color = "#D4AF37")}
+              onMouseEnter={(e) => hasActiveFilters && (e.target.style.backgroundColor = "#d4af37", e.target.style.color = "#fff")}
+              onMouseLeave={(e) => hasActiveFilters && (e.target.style.backgroundColor = "#fff", e.target.style.color = "#b8960e")}
             >
               Clear Filters
             </button>
@@ -746,102 +758,109 @@ const TransactionHistory = ({ transactions, members = [], onClose, isOpen }) => 
 
         {/* Results count */}
         {hasActiveFilters && (
-          <div className="tx-count" key={`count-${filteredTransactions.length}`} style={{ marginBottom: 16, fontSize: 14, color: "#666" }}>
+          <div className="tx-count" key={`count-${filteredTransactions.length}`} style={{ marginBottom: 16, fontSize: 13, color: "#737373", fontWeight: 500 }}>
             Showing {filteredTransactions.length} of {transactions.length} transactions
           </div>
         )}
 
         {transactions.length === 0 ? (
-          <div className="tx-empty" style={{ textAlign: "center", padding: "40px", color: "#999" }}>
-            <div style={{ fontSize: 48, marginBottom: 16, opacity: 0.5 }}>📭</div>
-            <p>No transactions yet.</p>
+          <div className="tx-empty" style={{ textAlign: "center", padding: "48px", color: "#a3a3a3" }}>
+            <div style={{ fontSize: 48, marginBottom: 16, opacity: 0.4 }}>
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg>
+            </div>
+            <p style={{ fontSize: 14 }}>No transactions yet.</p>
           </div>
         ) : filteredTransactions.length === 0 ? (
-          <div className="tx-empty" style={{ textAlign: "center", padding: "40px", color: "#999" }}>
-            <div style={{ fontSize: 48, marginBottom: 16, opacity: 0.5 }}>🔍</div>
-            <p>No transactions match your filters.</p>
+          <div className="tx-empty" style={{ textAlign: "center", padding: "48px", color: "#a3a3a3" }}>
+            <div style={{ fontSize: 48, marginBottom: 16, opacity: 0.4 }}>
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <p style={{ fontSize: 14 }}>No transactions match your filters.</p>
             <button
               onClick={clearFilters}
               style={{
                 marginTop: 16,
-                padding: "10px 20px",
+                padding: "10px 22px",
                 border: "none",
-                borderRadius: 6,
-                backgroundColor: "#D4AF37",
+                borderRadius: 8,
+                background: "linear-gradient(135deg, #f2ce5b, #b8960e)",
                 color: "#fff",
-                fontWeight: 600,
-                cursor: "pointer"
+                fontWeight: 700,
+                cursor: "pointer",
+                fontFamily: "'Inter', sans-serif",
+                fontSize: 13
               }}
             >
               Clear Filters
             </button>
           </div>
         ) : (
-          <div style={{ overflowX: "auto", borderRadius: 10, boxShadow: "0 4px 12px rgba(184,134,11,0.06)" }}>
+          <div style={{ overflowX: "auto", borderRadius: 12, boxShadow: "0 2px 8px rgba(0,0,0,0.04)", border: "1px solid #f0f0f0" }}>
             <table style={{
               width: "100%",
               minWidth: 850,
               borderCollapse: "collapse",
               backgroundColor: "#fff",
-              tableLayout: "fixed"
+              tableLayout: "fixed",
+              fontFamily: "'Inter', sans-serif"
             }}>
-              <thead style={{ backgroundColor: "#D4AF37", color: "#fff" }}>
+              <thead style={{ background: "linear-gradient(135deg, #f2ce5b, #d4af37)", color: "#fff" }}>
                 <tr>
-                  <th style={{ padding: "16px 8px", textAlign: "center", fontWeight: 700, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.5px", whiteSpace: "nowrap", width: "6%" }}>#</th>
-                  <th style={{ padding: "16px 12px", textAlign: "center", fontWeight: 700, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.5px", whiteSpace: "nowrap", width: "24%" }}>Member Name</th>
-                  <th style={{ padding: "16px 12px", textAlign: "center", fontWeight: 700, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.5px", whiteSpace: "nowrap", width: "15%" }}>Start Date</th>
-                  <th style={{ padding: "16px 12px", textAlign: "center", fontWeight: 700, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.5px", whiteSpace: "nowrap", width: "15%" }}>End Date</th>
-                  <th style={{ padding: "16px 12px", textAlign: "center", fontWeight: 700, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.5px", whiteSpace: "nowrap", width: "16%" }}>Lifetime Book Value</th>
-                  <th style={{ padding: "16px 12px", textAlign: "center", fontWeight: 700, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.5px", whiteSpace: "nowrap", width: "12%" }}>Status</th>
-                  <th style={{ padding: "16px 12px", textAlign: "center", fontWeight: 700, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.5px", whiteSpace: "nowrap", width: "12%" }}>Action</th>
+                  <th style={{ padding: "14px 8px", textAlign: "center", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.8px", whiteSpace: "nowrap", width: "6%" }}>#</th>
+                  <th style={{ padding: "14px 12px", textAlign: "center", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.8px", whiteSpace: "nowrap", width: "24%" }}>Member Name</th>
+                  <th style={{ padding: "14px 12px", textAlign: "center", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.8px", whiteSpace: "nowrap", width: "15%" }}>Start Date</th>
+                  <th style={{ padding: "14px 12px", textAlign: "center", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.8px", whiteSpace: "nowrap", width: "15%" }}>End Date</th>
+                  <th style={{ padding: "14px 12px", textAlign: "center", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.8px", whiteSpace: "nowrap", width: "16%" }}>Lifetime Book Value</th>
+                  <th style={{ padding: "14px 12px", textAlign: "center", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.8px", whiteSpace: "nowrap", width: "12%" }}>Status</th>
+                  <th style={{ padding: "14px 12px", textAlign: "center", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.8px", whiteSpace: "nowrap", width: "12%" }}>Action</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredTransactions.map((t, idx) => (
                   <tr key={`${t.name}-${idx}`} className="tx-row" style={{ 
-                    borderBottom: "1px solid #f0e6d2",
-                    backgroundColor: idx % 2 === 0 ? "#fff" : "#faf8f4",
+                    borderBottom: "1px solid #f0f0f0",
+                    backgroundColor: idx % 2 === 0 ? "#fff" : "#fafafa",
                     animationDelay: `${idx * 0.03}s`
                   }}>
-                    <td style={{ padding: "12px 8px", borderBottom: "1px solid #f0e6d2", color: "#888", fontSize: 14, textAlign: "center", fontWeight: 500 }}>{idx + 1}</td>
-                    <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0e6d2", color: "#2c2c2c", fontSize: 14, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.name || "—"}</td>
-                    <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0e6d2", color: "#2c2c2c", fontSize: 14, textAlign: "center", whiteSpace: "nowrap" }}>{t.startDate || "—"}</td>
-                    <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0e6d2", color: "#2c2c2c", fontSize: 14, textAlign: "center", whiteSpace: "nowrap" }}>{t.endDate || "—"}</td>
-                    <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0e6d2", color: "#2e7d32", fontSize: 14, fontWeight: 600, textAlign: "right", whiteSpace: "nowrap" }}>₱{parseFloat(t.bookValue || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
-                    <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0e6d2", color: "#2c2c2c", fontSize: 14, textAlign: "center" }}>
+                    <td style={{ padding: "12px 8px", borderBottom: "1px solid #f0f0f0", color: "#a3a3a3", fontSize: 13, textAlign: "center", fontWeight: 500 }}>{idx + 1}</td>
+                    <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0f0f0", color: "#262626", fontSize: 13, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.name || "—"}</td>
+                    <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0f0f0", color: "#525252", fontSize: 13, textAlign: "center", whiteSpace: "nowrap" }}>{t.startDate || "—"}</td>
+                    <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0f0f0", color: "#525252", fontSize: 13, textAlign: "center", whiteSpace: "nowrap" }}>{t.endDate || "—"}</td>
+                    <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0f0f0", color: "#16a34a", fontSize: 13, fontWeight: 600, textAlign: "right", whiteSpace: "nowrap" }}>₱{parseFloat(t.bookValue || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</td>
+                    <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0f0f0", color: "#262626", fontSize: 13, textAlign: "center" }}>
                       <span style={{
-                        padding: "5px 12px",
+                        padding: "4px 12px",
                         borderRadius: 20,
-                        fontSize: 12,
+                        fontSize: 11,
                         fontWeight: 600,
                         textTransform: "uppercase",
                         letterSpacing: "0.3px",
-                        backgroundColor: t.status === "Expired" ? "#ffebee" : t.status === "Deleted" ? "#fce4ec" : "#e8f5e9",
-                        color: t.status === "Expired" ? "#c62828" : t.status === "Deleted" ? "#880e4f" : "#2e7d32",
+                        backgroundColor: t.status === "Expired" ? "#fee2e2" : t.status === "Deleted" ? "#fce4ec" : "#dcfce7",
+                        color: t.status === "Expired" ? "#dc2626" : t.status === "Deleted" ? "#880e4f" : "#16a34a",
                         display: "inline-block",
                         whiteSpace: "nowrap"
                       }}>
                         {t.status || "—"}
                       </span>
                     </td>
-                    <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0e6d2", color: "#2c2c2c", fontSize: 14, textAlign: "center" }}>
+                    <td style={{ padding: "12px 10px", borderBottom: "1px solid #f0f0f0", color: "#262626", fontSize: 13, textAlign: "center" }}>
                       <div style={{ fontWeight: 600 }}>{t.action || "Updated"}</div>
                       {(t.action === "Updated" || t.action === "Reactivated") && t.changes && t.changes !== "No changes" && (
-                        <div style={{ fontSize: 11, color: "#B8860B", marginTop: 3, whiteSpace: "normal", lineHeight: 1.4 }}>{t.changes}</div>
+                        <div style={{ fontSize: 11, color: "#b8960e", marginTop: 3, whiteSpace: "normal", lineHeight: 1.4 }}>{t.changes}</div>
                       )}
                     </td>
                   </tr>
                 ))}
               </tbody>
               <tfoot className="tx-tfoot">
-                <tr style={{ backgroundColor: "#faf8f4", borderTop: "2px solid #D4AF37" }}>
-                  <td colSpan={2} style={{ padding: "14px 12px", fontSize: 13, fontWeight: 700, color: "#2c2c2c" }}>
+                <tr style={{ backgroundColor: "#fafafa", borderTop: "2px solid #d4af37" }}>
+                  <td colSpan={2} style={{ padding: "14px 12px", fontSize: 12, fontWeight: 700, color: "#262626" }}>
                     Total Transactions: {filteredTransactions.length}
                   </td>
-                  <td colSpan={2} style={{ padding: "14px 12px", fontSize: 13, fontWeight: 700, color: "#2c2c2c", textAlign: "center" }}>
+                  <td colSpan={2} style={{ padding: "14px 12px", fontSize: 12, fontWeight: 700, color: "#262626", textAlign: "center" }}>
                     Total Members: {hasActiveFilters ? [...new Set(filteredTransactions.map(t => t.name))].length : members.length}
                   </td>
-                  <td style={{ padding: "14px 12px", fontSize: 13, fontWeight: 700, color: "#B8860B", textAlign: "right", whiteSpace: "nowrap" }}>
+                  <td style={{ padding: "14px 12px", fontSize: 12, fontWeight: 700, color: "#b8960e", textAlign: "right", whiteSpace: "nowrap" }}>
                     ₱{(() => {
                       const names = [...new Set(filteredTransactions.map(t => t.name))];
                       return names.reduce((sum, name) => {

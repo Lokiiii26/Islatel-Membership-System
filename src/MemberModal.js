@@ -177,100 +177,107 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      backgroundColor: "rgba(0, 0, 0, 0.6)",
+      backdropFilter: "blur(6px)",
+      WebkitBackdropFilter: "blur(6px)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       zIndex: 1000,
-      animation: "fadeIn 0.3s ease-in-out"
+      animation: "fadeIn 0.25s ease-out"
     },
     modal: {
-      backgroundColor: "white",
-      borderRadius: "12px",
-      padding: "clamp(20px, 4vw, 40px)",
+      backgroundColor: "#fff",
+      borderRadius: "16px",
+      padding: "clamp(24px, 4vw, 40px)",
       maxWidth: "600px",
       width: "95%",
       maxHeight: "90vh",
       overflowY: "auto",
-      boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
-      animation: "slideUp 0.3s ease-in-out"
+      boxShadow: "0 24px 48px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0,0,0,0.05)",
+      animation: "slideUp 0.35s cubic-bezier(0.22, 1, 0.36, 1)"
     },
     header: {
-      marginBottom: "30px",
-      borderBottom: "3px solid #d4af37",
-      paddingBottom: "15px"
+      marginBottom: "28px",
+      borderBottom: "2px solid #f2ce5b",
+      paddingBottom: "16px"
     },
     title: {
-      fontSize: "clamp(20px, 4vw, 28px)",
+      fontFamily: "'Playfair Display', serif",
+      fontSize: "clamp(22px, 4vw, 28px)",
       fontWeight: "700",
-      color: "#2c2c2c",
-      margin: 0
+      color: "#171717",
+      margin: 0,
+      letterSpacing: "-0.3px"
     },
     formGroup: {
       marginBottom: "20px"
     },
     label: {
       display: "block",
-      fontSize: "14px",
+      fontSize: "12px",
       fontWeight: "600",
-      color: "#2c2c2c",
+      color: "#525252",
       marginBottom: "8px",
       textTransform: "uppercase",
-      letterSpacing: "0.3px"
+      letterSpacing: "0.5px"
     },
     input: {
       width: "100%",
       padding: "12px 16px",
       fontSize: "14px",
-      border: "2px solid #e8dcc8",
-      borderRadius: "8px",
-      transition: "all 0.3s ease",
-      fontFamily: "inherit",
-      backgroundColor: "white",
-      color: "#2c2c2c",
-      boxSizing: "border-box"
+      border: "1.5px solid #e5e5e5",
+      borderRadius: "10px",
+      transition: "all 0.25s ease",
+      fontFamily: "'Inter', sans-serif",
+      backgroundColor: "#fafafa",
+      color: "#171717",
+      boxSizing: "border-box",
+      outline: "none"
     },
     inputError: {
-      borderColor: "#c62828",
-      boxShadow: "0 0 0 3px rgba(198, 40, 40, 0.1)"
+      borderColor: "#ef4444",
+      boxShadow: "0 0 0 3px rgba(239, 68, 68, 0.1)",
+      backgroundColor: "#fef2f2"
     },
     errorText: {
-      color: "#c62828",
+      color: "#ef4444",
       fontSize: "12px",
-      marginTop: "4px",
+      marginTop: "6px",
       fontWeight: "500"
     },
     inputDisabled: {
       backgroundColor: "#f5f5f5",
       cursor: "not-allowed",
-      color: "#999"
+      color: "#a3a3a3",
+      borderColor: "#e5e5e5"
     },
     buttonContainer: {
       display: "flex",
       gap: "12px",
-      marginTop: "30px",
+      marginTop: "28px",
       justifyContent: "flex-end"
     },
     button: {
       padding: "12px 24px",
       border: "none",
-      borderRadius: "8px",
+      borderRadius: "10px",
       fontSize: "14px",
       fontWeight: "700",
       cursor: "pointer",
-      transition: "all 0.3s ease",
-      textTransform: "uppercase",
-      letterSpacing: "0.5px"
+      transition: "all 0.25s cubic-bezier(0.22, 1, 0.36, 1)",
+      fontFamily: "'Inter', sans-serif",
+      letterSpacing: "0.3px"
     },
     primaryButton: {
-      backgroundColor: "#d4af37",
-      color: "white",
-      boxShadow: "0 4px 12px rgba(212, 175, 55, 0.3)"
+      background: "linear-gradient(135deg, #f2ce5b, #b8960e)",
+      color: "#fff",
+      boxShadow: "0 4px 14px rgba(212, 175, 55, 0.3)"
     },
     secondaryButton: {
-      backgroundColor: "#e8dcc8",
-      color: "#2c2c2c",
-      boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)"
+      backgroundColor: "#f5f5f5",
+      color: "#525252",
+      border: "1.5px solid #e5e5e5"
     },
     dateGroup: {
       display: "grid",
@@ -295,95 +302,95 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
             <div style={{
               textAlign: "center",
               padding: "20px 0 16px",
-              borderBottom: "2px solid #e8dcc8",
+              borderBottom: "1.5px solid #f0f0f0",
               marginBottom: 24
             }}>
-              <div style={{ fontSize: 26, fontWeight: 800, color: "#2c2c2c", letterSpacing: "0.5px" }}>
+              <div style={{ fontSize: 26, fontWeight: 800, color: "#171717", letterSpacing: "-0.3px", fontFamily: "'Playfair Display', serif" }}>
                 {formData.name || "—"}
               </div>
               <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 8 }}>
                 {formData.isSenior && (
-                  <span style={{ padding: "3px 12px", borderRadius: 20, backgroundColor: "#fff3e0", color: "#e65100", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>Senior</span>
+                  <span style={{ padding: "4px 14px", borderRadius: 20, background: "linear-gradient(135deg, #fef3c7, #fde68a)", color: "#92400e", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>Senior</span>
                 )}
                 {formData.isPWD && (
-                  <span style={{ padding: "3px 12px", borderRadius: 20, backgroundColor: "#e8eaf6", color: "#283593", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>PWD</span>
+                  <span style={{ padding: "4px 14px", borderRadius: 20, background: "linear-gradient(135deg, #dbeafe, #bfdbfe)", color: "#1e40af", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>PWD</span>
                 )}
               </div>
             </div>
 
             {/* Book Value Highlight */}
             <div style={{
-              backgroundColor: "#f1f8e9",
-              border: "1px solid #c5e1a5",
-              borderRadius: 10,
-              padding: "16px 20px",
+              background: "linear-gradient(135deg, #f0fdf4, #dcfce7)",
+              border: "1px solid #bbf7d0",
+              borderRadius: 12,
+              padding: "18px 20px",
               textAlign: "center",
               marginBottom: 24
             }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: "#558b2f", textTransform: "uppercase", letterSpacing: "1px", marginBottom: 4 }}>Lifetime Book Value</div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: "#2e7d32" }}>₱{parseFloat(formData.bookValue || 0).toFixed(2)}</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#16a34a", textTransform: "uppercase", letterSpacing: "1.5px", marginBottom: 4 }}>Lifetime Book Value</div>
+              <div style={{ fontSize: 30, fontWeight: 800, color: "#15803d", letterSpacing: "-0.5px" }}>₱{parseFloat(formData.bookValue || 0).toFixed(2)}</div>
             </div>
 
             {/* Personal Information Section */}
             <div style={{ marginBottom: 20 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "#d4af37", textTransform: "uppercase", letterSpacing: "1.5px", marginBottom: 12, paddingBottom: 6, borderBottom: "2px solid #f5f0e5" }}>Personal Information</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#d4af37", textTransform: "uppercase", letterSpacing: "1.5px", marginBottom: 12, paddingBottom: 8, borderBottom: "1.5px solid #f5f5f5", display: "flex", alignItems: "center", gap: 6 }}>Personal Information</div>
               <div className="member-modal-view-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px 24px" }}>
                 <div>
-                  <div style={{ fontSize: 11, color: "#999", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 2 }}>Gender</div>
-                  <div style={{ fontSize: 15, fontWeight: 500, color: "#2c2c2c" }}>{formData.gender || "—"}</div>
+                  <div style={{ fontSize: 11, color: "#a3a3a3", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 3 }}>Gender</div>
+                  <div style={{ fontSize: 15, fontWeight: 500, color: "#262626" }}>{formData.gender || "—"}</div>
                 </div>
                 <div>
-                  <div style={{ fontSize: 11, color: "#999", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 2 }}>Birth Date</div>
-                  <div style={{ fontSize: 15, fontWeight: 500, color: "#2c2c2c" }}>{formData.birthDate ? new Date(formData.birthDate + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "—"}</div>
+                  <div style={{ fontSize: 11, color: "#a3a3a3", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 3 }}>Birth Date</div>
+                  <div style={{ fontSize: 15, fontWeight: 500, color: "#262626" }}>{formData.birthDate ? new Date(formData.birthDate + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "—"}</div>
                 </div>
               </div>
             </div>
 
             {/* Contact Information Section */}
             <div style={{ marginBottom: 20 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "#d4af37", textTransform: "uppercase", letterSpacing: "1.5px", marginBottom: 12, paddingBottom: 6, borderBottom: "2px solid #f5f0e5" }}>Contact Information</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#d4af37", textTransform: "uppercase", letterSpacing: "1.5px", marginBottom: 12, paddingBottom: 8, borderBottom: "1.5px solid #f5f5f5" }}>Contact Information</div>
               <div className="member-modal-view-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px 24px" }}>
                 <div>
-                  <div style={{ fontSize: 11, color: "#999", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 2 }}>Email</div>
-                  <div style={{ fontSize: 15, fontWeight: 500, color: "#2c2c2c", wordBreak: "break-all" }}>{formData.email || "—"}</div>
+                  <div style={{ fontSize: 11, color: "#a3a3a3", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 3 }}>Email</div>
+                  <div style={{ fontSize: 15, fontWeight: 500, color: "#262626", wordBreak: "break-all" }}>{formData.email || "—"}</div>
                 </div>
                 <div>
-                  <div style={{ fontSize: 11, color: "#999", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 2 }}>Mobile</div>
-                  <div style={{ fontSize: 15, fontWeight: 500, color: "#2c2c2c" }}>{formData.mobile || "—"}</div>
+                  <div style={{ fontSize: 11, color: "#a3a3a3", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 3 }}>Mobile</div>
+                  <div style={{ fontSize: 15, fontWeight: 500, color: "#262626" }}>{formData.mobile || "—"}</div>
                 </div>
               </div>
               <div style={{ marginTop: 14 }}>
-                <div style={{ fontSize: 11, color: "#999", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 2 }}>Address</div>
-                <div style={{ fontSize: 15, fontWeight: 500, color: "#2c2c2c" }}>{formData.address || "—"}</div>
+                <div style={{ fontSize: 11, color: "#a3a3a3", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 3 }}>Address</div>
+                <div style={{ fontSize: 15, fontWeight: 500, color: "#262626" }}>{formData.address || "—"}</div>
               </div>
             </div>
 
             {/* Identification Section */}
             <div style={{ marginBottom: 20 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "#d4af37", textTransform: "uppercase", letterSpacing: "1.5px", marginBottom: 12, paddingBottom: 6, borderBottom: "2px solid #f5f0e5" }}>Proof of Identity</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#d4af37", textTransform: "uppercase", letterSpacing: "1.5px", marginBottom: 12, paddingBottom: 8, borderBottom: "1.5px solid #f5f5f5" }}>Proof of Identity</div>
               <div className="member-modal-view-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px 24px" }}>
                 <div>
-                  <div style={{ fontSize: 11, color: "#999", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 2 }}>ID Type</div>
-                  <div style={{ fontSize: 15, fontWeight: 500, color: "#2c2c2c" }}>{formData.idType || "—"}</div>
+                  <div style={{ fontSize: 11, color: "#a3a3a3", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 3 }}>ID Type</div>
+                  <div style={{ fontSize: 15, fontWeight: 500, color: "#262626" }}>{formData.idType || "—"}</div>
                 </div>
                 <div>
-                  <div style={{ fontSize: 11, color: "#999", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 2 }}>ID Number</div>
-                  <div style={{ fontSize: 15, fontWeight: 500, color: "#2c2c2c" }}>{formData.idNumber || "—"}</div>
+                  <div style={{ fontSize: 11, color: "#a3a3a3", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 3 }}>ID Number</div>
+                  <div style={{ fontSize: 15, fontWeight: 500, color: "#262626" }}>{formData.idNumber || "—"}</div>
                 </div>
               </div>
             </div>
 
             {/* Membership Period Section */}
             <div style={{ marginBottom: 24 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "#d4af37", textTransform: "uppercase", letterSpacing: "1.5px", marginBottom: 12, paddingBottom: 6, borderBottom: "2px solid #f5f0e5" }}>Membership Period</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#d4af37", textTransform: "uppercase", letterSpacing: "1.5px", marginBottom: 12, paddingBottom: 8, borderBottom: "1.5px solid #f5f5f5" }}>Membership Period</div>
               <div className="member-modal-view-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px 24px" }}>
                 <div>
-                  <div style={{ fontSize: 11, color: "#999", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 2 }}>Start Date</div>
-                  <div style={{ fontSize: 15, fontWeight: 500, color: "#2c2c2c" }}>{formData.startDate ? new Date(formData.startDate + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "—"}</div>
+                  <div style={{ fontSize: 11, color: "#a3a3a3", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 3 }}>Start Date</div>
+                  <div style={{ fontSize: 15, fontWeight: 500, color: "#262626" }}>{formData.startDate ? new Date(formData.startDate + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "—"}</div>
                 </div>
                 <div>
-                  <div style={{ fontSize: 11, color: "#999", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 2 }}>End Date</div>
-                  <div style={{ fontSize: 15, fontWeight: 500, color: "#2c2c2c" }}>{formData.endDate ? new Date(formData.endDate + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "—"}</div>
+                  <div style={{ fontSize: 11, color: "#a3a3a3", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 3 }}>End Date</div>
+                  <div style={{ fontSize: 15, fontWeight: 500, color: "#262626" }}>{formData.endDate ? new Date(formData.endDate + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "—"}</div>
                 </div>
               </div>
             </div>
@@ -392,10 +399,10 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
             <div style={modalStyles.buttonContainer}>
               <button
                 type="button"
-                style={{ ...modalStyles.button, width: "100%" }}
+                style={{ ...modalStyles.button, ...modalStyles.secondaryButton, width: "100%" }}
                 onClick={onClose}
-                onMouseEnter={(e) => { e.target.style.backgroundColor = "#d4c4a8"; }}
-                onMouseLeave={(e) => { e.target.style.backgroundColor = "#e8dcc8"; }}
+                onMouseEnter={(e) => { e.target.style.borderColor = "#d4af37"; e.target.style.color = "#b8960e"; }}
+                onMouseLeave={(e) => { e.target.style.borderColor = "#e5e5e5"; e.target.style.color = "#525252"; }}
               >
                 Close
               </button>
@@ -406,7 +413,7 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
           <form onSubmit={handleSubmit}>
           <div style={modalStyles.formGroup}>
             <label style={modalStyles.label}>
-              Member Name {requiredFields.includes("name") && <span style={{ color: "#c62828" }}>*</span>}
+              Member Name {requiredFields.includes("name") && <span style={{ color: "#ef4444" }}>*</span>}
             </label>
             <input
               style={{
@@ -420,12 +427,14 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
               placeholder="Enter member name"
               onFocus={(e) => {
                 e.target.style.borderColor = "#d4af37";
-                e.target.style.boxShadow = "0 0 0 3px rgba(212, 175, 55, 0.1)";
+                e.target.style.boxShadow = "0 0 0 3px rgba(212, 175, 55, 0.12)";
+                e.target.style.backgroundColor = "#fff";
               }}
               onBlur={(e) => {
                 if (!errors.name) {
-                  e.target.style.borderColor = "#e8dcc8";
+                  e.target.style.borderColor = "#e5e5e5";
                   e.target.style.boxShadow = "none";
+                  e.target.style.backgroundColor = "#fafafa";
                 }
               }}
             />
@@ -444,7 +453,7 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
                   flex: 1,
                   fontWeight: 700,
                   fontSize: 16,
-                  color: "#2e7d32"
+                  color: "#16a34a"
                 }}
                 type="text"
                 value={`₱${parseFloat(formData.bookValue || 0).toFixed(2)}`}
@@ -466,11 +475,13 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
                 placeholder="Amount to add"
                 onFocus={(e) => {
                   e.target.style.borderColor = "#d4af37";
-                  e.target.style.boxShadow = "0 0 0 3px rgba(212, 175, 55, 0.1)";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(212, 175, 55, 0.12)";
+                  e.target.style.backgroundColor = "#fff";
                 }}
                 onBlur={(e) => {
-                  e.target.style.borderColor = "#e8dcc8";
+                  e.target.style.borderColor = "#e5e5e5";
                   e.target.style.boxShadow = "none";
+                  e.target.style.backgroundColor = "#fafafa";
                 }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -484,14 +495,17 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
                 onClick={handleAddBookValue}
                 style={{
                   padding: "10px 18px",
-                  backgroundColor: "#2e7d32",
+                  background: "linear-gradient(135deg, #22c55e, #16a34a)",
                   color: "#fff",
                   border: "none",
-                  borderRadius: 8,
+                  borderRadius: 10,
                   fontWeight: 600,
                   cursor: "pointer",
                   fontSize: 13,
-                  whiteSpace: "nowrap"
+                  whiteSpace: "nowrap",
+                  fontFamily: "'Inter', sans-serif",
+                  boxShadow: "0 2px 8px rgba(34,197,94,0.3)",
+                  transition: "all 0.25s ease"
                 }}
               >
                 + Add
@@ -512,7 +526,7 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
 
           <div style={modalStyles.formGroup}>
             <label style={modalStyles.label}>
-              Email Address {requiredFields.includes("email") && <span style={{ color: "#c62828" }}>*</span>}
+              Email Address {requiredFields.includes("email") && <span style={{ color: "#ef4444" }}>*</span>}
             </label>
             <input
               style={{
@@ -530,7 +544,7 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
 
           <div style={modalStyles.formGroup}>
             <label style={modalStyles.label}>
-              Mobile Number {requiredFields.includes("mobile") && <span style={{ color: "#c62828" }}>*</span>}
+              Mobile Number {requiredFields.includes("mobile") && <span style={{ color: "#ef4444" }}>*</span>}
             </label>
             <input
               style={{
@@ -612,7 +626,7 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
           <div style={modalStyles.dateGroup}>
             <div style={modalStyles.formGroup}>
               <label style={modalStyles.label}>
-                Start Date {requiredFields.includes("startDate") && <span style={{ color: "#c62828" }}>*</span>}
+                Start Date {requiredFields.includes("startDate") && <span style={{ color: "#ef4444" }}>*</span>}
               </label>
               <input
                 style={{
@@ -625,22 +639,24 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
                 onChange={handleChange}
                 onFocus={(e) => {
                   e.target.style.borderColor = "#d4af37";
-                  e.target.style.boxShadow = "0 0 0 3px rgba(212, 175, 55, 0.1)";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(212, 175, 55, 0.12)";
+                  e.target.style.backgroundColor = "#fff";
                 }}
                 onBlur={(e) => {
                   if (!errors.startDate) {
-                    e.target.style.borderColor = "#e8dcc8";
+                    e.target.style.borderColor = "#e5e5e5";
                     e.target.style.boxShadow = "none";
+                    e.target.style.backgroundColor = "#fafafa";
                   }
                 }}
               />
               {errors.startDate && <div style={modalStyles.errorText}>{errors.startDate}</div>}
-              {reactivateMode && <small style={{ color: "#666", marginTop: "4px", display: "block" }}>New start date</small>}
+              {reactivateMode && <small style={{ color: "#737373", marginTop: "4px", display: "block" }}>New start date</small>}
             </div>
 
             <div style={modalStyles.formGroup}>
               <label style={modalStyles.label}>
-                End Date {requiredFields.includes("endDate") && <span style={{ color: "#c62828" }}>*</span>}
+                End Date {requiredFields.includes("endDate") && <span style={{ color: "#ef4444" }}>*</span>}
               </label>
               <input
                 style={{
@@ -653,30 +669,34 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
                 onChange={handleChange}
                 onFocus={(e) => {
                   e.target.style.borderColor = "#d4af37";
-                  e.target.style.boxShadow = "0 0 0 3px rgba(212, 175, 55, 0.1)";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(212, 175, 55, 0.12)";
+                  e.target.style.backgroundColor = "#fff";
                 }}
                 onBlur={(e) => {
                   if (!errors.endDate) {
-                    e.target.style.borderColor = "#e8dcc8";
+                    e.target.style.borderColor = "#e5e5e5";
                     e.target.style.boxShadow = "none";
+                    e.target.style.backgroundColor = "#fafafa";
                   }
                 }}
               />
               {errors.endDate && <div style={modalStyles.errorText}>{errors.endDate}</div>}
-              {reactivateMode && <small style={{ color: "#666", marginTop: "4px", display: "block" }}>New end date</small>}
+              {reactivateMode && <small style={{ color: "#737373", marginTop: "4px", display: "block" }}>New end date</small>}
             </div>
           </div>
 
           <div style={modalStyles.buttonContainer}>
             <button
               type="button"
-              style={modalStyles.button}
+              style={{ ...modalStyles.button, ...modalStyles.secondaryButton }}
               onClick={onClose}
               onMouseEnter={(e) => {
-                e.target.style.backgroundColor = "#d4c4a8";
+                e.target.style.borderColor = "#d4af37";
+                e.target.style.color = "#b8960e";
               }}
               onMouseLeave={(e) => {
-                e.target.style.backgroundColor = "#e8dcc8";
+                e.target.style.borderColor = "#e5e5e5";
+                e.target.style.color = "#525252";
               }}
             >
               Cancel
@@ -685,12 +705,12 @@ const MemberModal = ({ isOpen, member, onClose, onSave, isViewOnly = false, reac
               type="submit"
               style={{ ...modalStyles.button, ...modalStyles.primaryButton }}
               onMouseEnter={(e) => {
-                e.target.style.backgroundColor = "#b8860b";
                 e.target.style.transform = "translateY(-2px)";
+                e.target.style.boxShadow = "0 8px 20px rgba(212, 175, 55, 0.4)";
               }}
               onMouseLeave={(e) => {
-                e.target.style.backgroundColor = "#d4af37";
                 e.target.style.transform = "none";
+                e.target.style.boxShadow = "0 4px 14px rgba(212, 175, 55, 0.3)";
               }}
             >
               {reactivateMode ? "Reactivate" : member ? "Update" : "Add"} Member
